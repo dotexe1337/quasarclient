@@ -58,8 +58,7 @@ public class InventoryS2CPacketMixin {
                             found[0] = true;
                             ClickSlotC2SPacket cs = new ClickSlotC2SPacket(MinecraftClient.getInstance().player.currentScreenHandler.syncId, s.id, 0, SlotActionType.PICKUP, s.getStack(), (short) 0x7f0f);
                             MinecraftClient.getInstance().getNetworkHandler().sendPacket(cs);
-                            ChatMessageC2SPacket cm = new ChatMessageC2SPacket("/cf");
-                            MinecraftClient.getInstance().getNetworkHandler().sendPacket(cm);
+                            AutoCF.ticks2 = 10;
                         }
                     }
                 });

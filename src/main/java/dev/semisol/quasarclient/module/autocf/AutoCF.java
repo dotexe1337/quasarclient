@@ -23,6 +23,7 @@ public class AutoCF {
     public static int ticks = -1;
     public static int max = 10000;
     public static boolean on = false;
+    public static int ticks2 = -1;
     public static void init(){
         QuasarClient.disp.register(
                 LiteralArgumentBuilder.<CommandSource>literal("autocf")

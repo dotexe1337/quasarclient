@@ -3,6 +3,7 @@ package dev.semisol.quasarclient.module.autocf.mixin;
 import dev.semisol.quasarclient.module.autocf.AutoCF;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.SlotActionType;
@@ -29,6 +30,13 @@ public class TickMixin {
                     });
                 }
             } catch (Exception ignored){}
+        }
+        if (AutoCF.ticks2 > -1 && AutoCF.on){
+            AutoCF.ticks2--;
+            if (AutoCF.ticks2 < 0){
+                ChatMessageC2SPacket cm = new ChatMessageC2SPacket("/cf");
+                MinecraftClient.getInstance().getNetworkHandler().sendPacket(cm);
+            }
         }
     }
 }
