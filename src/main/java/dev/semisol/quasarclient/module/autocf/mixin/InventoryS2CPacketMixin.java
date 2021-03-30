@@ -39,7 +39,6 @@ public class InventoryS2CPacketMixin {
                                 return;
                             try {
                                 JsonElement e = new JsonParser().parse(ct.getCompound("display").getList("Lore", 8).getString(2));
-                                System.out.println(ct.getCompound("display").getList("Lore", 8).getString(2));
                                 if (!e.isJsonObject()) return;
                                 JsonObject o = e.getAsJsonObject();
                                 if (!o.has("extra") || !o.get("extra").isJsonArray()) return;
