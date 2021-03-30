@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "quasarclient",
+  "version": "${version}",
+  "name": "Quasar Client",
+  "description": "Utility mod that can be run standalone or with other utility mods️",
+  "authors": [
+    "Semisol",
+    "0x150"
+  ],
+  "contributors": [],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.semisol.quasarclient.QuasarClient"
+    ],
+    "client": [],
+    "server": []
+  },
+  "mixins": [
+    "module_dcol.mixins.json",
+    "module_commands.mixins.json",
+    "module_autocf.mixins.json",
+    "module_anticaptcha.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3"
+  },
+  "accessWidener": "quasar.accesswidener"
+}

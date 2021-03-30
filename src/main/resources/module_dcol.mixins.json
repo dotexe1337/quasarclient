@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "dev.semisol.quasarclient.module.dcol.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AuthorizationPacketMixin",
+    "CommandTreeS2CPacketMixin",
+    "MinecraftMixin",
+    "TickMixin",
+    "PlayerRespawnS2CPacketMixin",
+    "GameJoinS2CPacketMixin",
+    "GameMessageS2CPacketMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
