@@ -38,5 +38,12 @@ public class DataCollectorModule {
                             return 0;
                         })
         );
+        QuasarClient.disp.register(
+                LiteralArgumentBuilder.<CommandSource>literal("plugins")
+                        .executes(cc -> {
+                            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6dcol§7] Plugins: " + String.join(", ", Globals.plugins)), false);
+                            return 0;
+                        })
+        );
     }
 }

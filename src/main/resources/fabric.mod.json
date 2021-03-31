@@ -23,6 +23,7 @@
     "module_dcol.mixins.json",
     "module_commands.mixins.json",
     "module_autocf.mixins.json",
+    "module_autocg.mixins.json",
     "module_anticaptcha.mixins.json"
   ],
   "depends": {

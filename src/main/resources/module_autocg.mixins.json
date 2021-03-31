@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "dev.semisol.quasarclient.module.autocg.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "GameMessageS2CPacketMixin",
+    "TickMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

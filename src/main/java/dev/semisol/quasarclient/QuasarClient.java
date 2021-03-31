@@ -8,6 +8,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import dev.semisol.quasarclient.module.anticaptcha.AntiCaptcha;
 import dev.semisol.quasarclient.module.autocf.AutoCF;
+import dev.semisol.quasarclient.module.autocg.AutoCG;
 import dev.semisol.quasarclient.module.dcol.DataCollectorModule;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.command.CommandSource;
@@ -32,6 +33,7 @@ public class QuasarClient implements ModInitializer {
         log(Level.INFO, "Loading the mod...");
         DataCollectorModule.init();
         AutoCF.init();
+        AutoCG.init();
         AntiCaptcha.init();
         log(Level.INFO, "Should be ready.");
         //TODO: Initializer
