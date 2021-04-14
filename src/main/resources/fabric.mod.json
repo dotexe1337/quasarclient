@@ -10,7 +10,7 @@
   ],
   "contributors": [],
   "contact": {},
-  "license": "MIT",
+  "license": "GPL-3.0",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -24,7 +24,9 @@
     "module_commands.mixins.json",
     "module_autocf.mixins.json",
     "module_autocg.mixins.json",
-    "module_anticaptcha.mixins.json"
+    "module_anticaptcha.mixins.json",
+    "module_bookdupe.mixins.json",
+    "module_tps.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3"

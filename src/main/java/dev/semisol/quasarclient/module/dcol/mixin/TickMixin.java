@@ -9,6 +9,7 @@ PLEASE READ THE COPYRIGHT NOTICE IN THE PROJECT ROOT, IF EXISTENT
 package dev.semisol.quasarclient.module.dcol.mixin;
 
 import com.google.gson.*;
+import dev.semisol.quasarclient.QuasarClient;
 import dev.semisol.quasarclient.module.dcol.Globals;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -88,8 +89,7 @@ public class TickMixin {
             try {
                 f.createNewFile();
                 os = new FileWriter(f);
-                Gson jw = new GsonBuilder().create();
-                jw.toJson(j, os);
+                QuasarClient.g.toJson(j, os);
             } catch (IOException e) {
                 e.printStackTrace();
                 MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6dcol§7] §cSaving failed"), false);

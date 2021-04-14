@@ -31,6 +31,7 @@ public class AutoCF {
                         RequiredArgumentBuilder.<CommandSource, Boolean>argument("on", BoolArgumentType.bool())
                         .executes(c -> {
                             on = BoolArgumentType.getBool(c, "on");
+                            QuasarClient.saveConfig();
                             MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6autocf§7] AutoCF is now " + (on?"§aON":"§cOFF")+"§7."), false);
                             return 0;
                         })
@@ -46,6 +47,7 @@ public class AutoCF {
                                 RequiredArgumentBuilder.<CommandSource, Integer>argument("max", IntegerArgumentType.integer())
                                         .executes(c -> {
                                             max = IntegerArgumentType.getInteger(c, "max");
+                                            QuasarClient.saveConfig();
                                             MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6autocf§7] AutoCF maximum wager is now §6" + max +"§7."), false);
                                             return 0;
                                         })

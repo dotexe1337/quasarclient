@@ -1,6 +1,5 @@
-package dev.semisol.quasarclient.module.dcol.mixin;
+package dev.semisol.quasarclient.module.tps.mixin;
 
-import dev.semisol.quasarclient.module.dcol.Globals;
 import dev.semisol.quasarclient.module.tps.TPS;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
@@ -16,8 +15,9 @@ import java.util.Arrays;
 public class GameJoinS2CPacketMixin {
     @Inject(at = @At("TAIL"), method = "apply")
     public void apply(ClientPlayPacketListener arg, CallbackInfo ci){
-        Globals.hashseed = this.getSha256Seed();
+        TPS.recvFirst = false;
+        Arrays.fill(TPS.last30, 20d);
+        Arrays.fill(TPS.ls10, 20d);
+        Arrays.fill(TPS.ls10t, 20d);
     }
-    @Shadow
-    public long getSha256Seed(){return 0l;};
 }

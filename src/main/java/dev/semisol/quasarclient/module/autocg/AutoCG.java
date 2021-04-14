@@ -20,6 +20,7 @@ public class AutoCG {
                                 RequiredArgumentBuilder.<CommandSource, Boolean>argument("on", BoolArgumentType.bool())
                                         .executes(c -> {
                                             on = BoolArgumentType.getBool(c, "on");
+                                            QuasarClient.saveConfig();
                                             MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6autocg§7] AutoCG is now " + (on?"§aON":"§cOFF")+"§7."), false);
                                             return 0;
                                         })

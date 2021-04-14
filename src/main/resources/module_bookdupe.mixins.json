@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.semisol.quasarclient.module.bookdupe.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BookUpdateC2SPacketMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

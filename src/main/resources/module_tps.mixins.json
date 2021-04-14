@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "dev.semisol.quasarclient.module.tps.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "WorldTimeUpdateS2CPacketMixin",
+    "GameJoinS2CPacketMixin",
+    "GameRendererMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

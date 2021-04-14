@@ -25,7 +25,7 @@ public class GameMessageS2CPacketMixin {
             final Matcher matcher = pattern.matcher(this.message.getString());
             if (matcher.find()) {
                 AutoCG.word = matcher.group(1);
-                AutoCG.ticks = 20;
+                AutoCG.ticks = 11 + (AutoCG.word.length() * 2) + ((int) Math.floor(Math.random() * 9));
             }
         }
     }
