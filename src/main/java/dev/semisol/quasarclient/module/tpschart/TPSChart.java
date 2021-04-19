@@ -20,7 +20,7 @@ public class TPSChart extends Module {
             int h = QuasarClient.minecraft.getWindow().getScaledHeight() - 10;
             int t = 2;
             double p = 3;
-            int lt = (int) Math.min(5, Math.max((QuasarClient.minecraft.getWindow().getScaleFactor()), 1));
+            int lt = 2;
             double prev = 0;
             RenderHelper.renderLineScreen(new Vec3d(5, h - (20*p), 0), new Vec3d((29*t) + 5, h - (20*p), 0), new Color(0xFF00FF00, true), lt);
             RenderHelper.renderLineScreen(new Vec3d(5, h, 0), new Vec3d((29*t) + 5, h, 0), new Color(0xFFFF0000, true), lt);
