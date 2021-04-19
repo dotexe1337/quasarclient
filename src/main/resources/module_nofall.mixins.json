@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.semisol.quasarclient.module.nofall.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "PlayerMoveC2SPacketMixin"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

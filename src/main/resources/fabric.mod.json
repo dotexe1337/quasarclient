@@ -24,7 +24,8 @@
     "module_registry.mixins.json",
     "module_bookdupe.mixins.json",
     "module_tps.mixins.json",
-    "module_flight.mixins.json"
+    "module_flight.mixins.json",
+    "module_nofall.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3"

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import dev.semisol.quasarclient.module.bookdupe.BookDupe;
 import dev.semisol.quasarclient.module.dcol.DataCollectorModule;
 import dev.semisol.quasarclient.module.flight.Flight;
+import dev.semisol.quasarclient.module.nofall.NoFall;
 import dev.semisol.quasarclient.module.tps.TPS;
 import dev.semisol.quasarclient.module.tpschart.TPSChart;
 import dev.semisol.quasarclient.registry.ModuleRegistry;
@@ -35,6 +36,7 @@ public class QuasarClient implements ModInitializer {
         ModuleRegistry.register(new TPSChart());
         ModuleRegistry.register(new DataCollectorModule());
         ModuleRegistry.register(new Flight());
+        ModuleRegistry.register(new NoFall());
         ModuleRegistry.register(new BookDupe());
         ModuleRegistry.loadConfiguration();
         ModuleRegistry.moduleInitDone();
