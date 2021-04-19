@@ -5,7 +5,7 @@
   "mixins": [
     "WorldTimeUpdateS2CPacketMixin",
     "GameJoinS2CPacketMixin",
-    "GameRendererMixin"
+    "PlayerRespawnS2CPacketMixin"
   ],
   "client": [],
   "server": [],

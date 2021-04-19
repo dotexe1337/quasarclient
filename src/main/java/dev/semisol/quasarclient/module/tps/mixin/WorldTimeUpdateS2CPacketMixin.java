@@ -1,11 +1,8 @@
 package dev.semisol.quasarclient.module.tps.mixin;
 
-import dev.semisol.quasarclient.module.dcol.Globals;
 import dev.semisol.quasarclient.module.tps.TPS;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

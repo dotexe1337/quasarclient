@@ -1,9 +1,10 @@
 {
   "required": true,
-  "package": "dev.semisol.quasarclient.module.autocg.mixin",
+  "package": "dev.semisol.quasarclient.module.flight.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "GameMessageS2CPacketMixin",
+    "HealthUpdateS2CPacketMixin",
+    "PlayerMoveC2SPacketMixin",
     "TickMixin"
   ],
   "client": [],

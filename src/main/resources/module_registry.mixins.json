@@ -1,10 +1,11 @@
 {
   "required": true,
-  "package": "dev.semisol.quasarclient.module.commands.mixin",
+  "package": "dev.semisol.quasarclient.registry.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ClientPlayerEntityMixin",
-    "CommandSuggestorMixin"
+    "CommandSuggestorMixin",
+    "GameRendererMixin"
   ],
   "client": [],
   "server": [],

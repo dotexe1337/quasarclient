@@ -1,24 +1,22 @@
-package dev.semisol.quasarclient.module.tps.mixin;
+package dev.semisol.quasarclient.module.tpschart;
 
 import dev.semisol.quasarclient.QuasarClient;
-import dev.semisol.quasarclient.etc.RenderHelper;
 import dev.semisol.quasarclient.module.tps.TPS;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import dev.semisol.quasarclient.registry.Module;
+import dev.semisol.quasarclient.etc.RenderHelper;
 import net.minecraft.util.math.Vec3d;
-import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 
-@Mixin(GameRenderer.class)
-public class GameRendererMixin {
-    @Inject(method = "render", at = @At("RETURN"))
-    private void onRenderWorld(CallbackInfo ci) {
-        if (TPS.chartOn && QuasarClient.minecraft.world != null){
+public class TPSChart extends Module {
+    @Override
+    public String getId() {
+        return "tpschart";
+    }
+
+    @Override
+    public void onHudRender() {
+        if (QuasarClient.minecraft.world != null){
             int h = QuasarClient.minecraft.getWindow().getScaledHeight() - 10;
             int t = 2;
             double p = 3;
@@ -47,5 +45,9 @@ public class GameRendererMixin {
 
         }
     }
-}
 
+    @Override
+    public void onRegistered() {
+
+    }
+}

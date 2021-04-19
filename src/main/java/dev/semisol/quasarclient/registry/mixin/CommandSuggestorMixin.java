@@ -1,9 +1,10 @@
-package dev.semisol.quasarclient.module.commands.mixin;
+package dev.semisol.quasarclient.registry.mixin;
 
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
 import dev.semisol.quasarclient.QuasarClient;
+import dev.semisol.quasarclient.registry.ModuleRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.CommandSuggestor;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -25,9 +26,9 @@ public class CommandSuggestorMixin {
         if (reader.canRead(1) && reader.getString().startsWith("*")){
             assert MinecraftClient.getInstance().player != null;
             reader.setCursor(reader.getCursor() + 1);
-            parse = QuasarClient.disp.parse(reader, MinecraftClient.getInstance().player.getCommandSource());
+            parse = ModuleRegistry.dispatcher.parse(reader, MinecraftClient.getInstance().player.getCommandSource());
             if (this.window == null || !this.completingSuggestions) {
-                this.pendingSuggestions = QuasarClient.disp.getCompletionSuggestions(parse, this.textField.getCursor());
+                this.pendingSuggestions = ModuleRegistry.dispatcher.getCompletionSuggestions(parse, this.textField.getCursor());
                 this.pendingSuggestions.thenRun(() -> {
                     if (this.pendingSuggestions.isDone()) {
                         this.show();
