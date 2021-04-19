@@ -30,7 +30,10 @@ public class TPSChart extends Module {
                     continue;
                 }
                 double curr = TPS.last30[i];
-                RenderHelper.renderLineScreen(new Vec3d(((i-1) * t) + 5, h - ((int) (prev * p)), 0), new Vec3d(i*t + 5, h - ((int) (curr * p)), 0), new Color(0xFFEEFF00, true), lt);
+                Vec3d origin = new Vec3d(((i-1) * t) + 5, h - ((int) (prev * p)), 0);
+                Vec3d dest = new Vec3d(i*t + 5, h - ((int) (curr * p)), 0);
+                dest.add(dest.subtract(origin).normalize().multiply(((double) lt) / 4d));
+                RenderHelper.renderLineScreen(origin, dest, new Color(0xFFEEFF00, true), lt);
                 prev = curr;
             }
             for (int i = 0; i < 30; i++){
@@ -39,7 +42,10 @@ public class TPSChart extends Module {
                     continue;
                 }
                 double curr = TPS.ls10t[i];
-                RenderHelper.renderLineScreen(new Vec3d(((i-1) * t) + 5, h - ((int) (prev * p)), 0), new Vec3d(i*t + 5, h - ((int) (curr * p)), 0), new Color(0xFF00ACFF, true), lt);
+                Vec3d origin = new Vec3d(((i-1) * t) + 5, h - ((int) (prev * p)), 0);
+                Vec3d dest = new Vec3d(i*t + 5, h - ((int) (curr * p)), 0);
+                dest.add(dest.subtract(origin).normalize().multiply(((double) lt) / 4d));
+                RenderHelper.renderLineScreen(origin, dest, new Color(0xFF00ACFF, true), lt);
                 prev = curr;
             }
 
