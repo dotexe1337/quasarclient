@@ -114,6 +114,7 @@ public class ModuleRegistry {
         enabled.put(m, false);
         modMap.put(m.getId(), m);
         m.onRegistered();
+        saveConfiguration();
     }
     public static boolean isOn(Module m){
         return enabled.getOrDefault(m, false);
