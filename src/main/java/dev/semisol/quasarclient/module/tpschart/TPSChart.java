@@ -32,7 +32,6 @@ public class TPSChart extends Module {
                 double curr = TPS.last30[i];
                 Vec3d origin = new Vec3d(((i-1) * t) + 5, h - ((int) (prev * p)), 0);
                 Vec3d dest = new Vec3d(i*t + 5, h - ((int) (curr * p)), 0);
-                dest.add(dest.subtract(origin).normalize().multiply(((double) lt) / 4d));
                 RenderHelper.renderLineScreen(origin, dest, new Color(0xFFEEFF00, true), lt);
                 prev = curr;
             }
@@ -44,11 +43,9 @@ public class TPSChart extends Module {
                 double curr = TPS.ls10t[i];
                 Vec3d origin = new Vec3d(((i-1) * t) + 5, h - ((int) (prev * p)), 0);
                 Vec3d dest = new Vec3d(i*t + 5, h - ((int) (curr * p)), 0);
-                dest.add(dest.subtract(origin).normalize().multiply(((double) lt) / 4d));
                 RenderHelper.renderLineScreen(origin, dest, new Color(0xFF00ACFF, true), lt);
                 prev = curr;
             }
-
         }
     }
 

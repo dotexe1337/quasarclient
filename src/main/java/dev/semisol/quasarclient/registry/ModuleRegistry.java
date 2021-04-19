@@ -55,8 +55,9 @@ public class ModuleRegistry {
         }
         modules.forEach(k -> {
             try {
+                enabled.put(k, false);
                 JsonObject j2 = j.get(k.getId()).getAsJsonObject();
-                if (k.persistEnabling()) setOn(k, j2.get("on").getAsBoolean());
+                if (k.persistEnabling()) enabled.put(k, j2.get("on").getAsBoolean());
                 if (!k.loadConfig(j2)){
                     QuasarClient.log(Level.WARN, "Incomplete config for: " + k.getId() + ". New config changes?");
                 }
@@ -114,7 +115,6 @@ public class ModuleRegistry {
         enabled.put(m, false);
         modMap.put(m.getId(), m);
         m.onRegistered();
-        saveConfiguration();
     }
     public static boolean isOn(Module m){
         return enabled.getOrDefault(m, false);
@@ -124,6 +124,7 @@ public class ModuleRegistry {
         if (enabled.get(m) == on) return;
         enabled.put(m, on);
         m.onToggle();
+        saveConfiguration();
     }
     public static Module getModule(String s){
         return modMap.getOrDefault(s, null);
