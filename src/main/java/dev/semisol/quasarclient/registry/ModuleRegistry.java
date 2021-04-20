@@ -4,11 +4,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import dev.semisol.quasarclient.QuasarClient;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.command.CommandSource;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class ModuleRegistry {
     private static File confF;
@@ -61,6 +64,9 @@ public class ModuleRegistry {
                 if (!k.loadConfig(j2)){
                     QuasarClient.log(Level.WARN, "Incomplete config for: " + k.getId() + ". New config changes?");
                 }
+                for (Keybind kb: k.getKeybinds()){
+                    kb.key = j2.get("keybind_" + kb.name).getAsInt();
+                }
             } catch(Exception ignored) {
                 QuasarClient.log(Level.WARN, "Malformed config for: " + k.getId());
             }
@@ -92,12 +98,76 @@ public class ModuleRegistry {
         dispatcher.register(
                lab
         );
+        LiteralArgumentBuilder<CommandSource> lab2 = LiteralArgumentBuilder.literal("keybind");
+        modules.forEach(m -> {
+            if (m.getKeybinds().length == 0) return;
+            LiteralArgumentBuilder<CommandSource> lab3 = LiteralArgumentBuilder.literal(m.getId());
+            for (Keybind k: m.getKeybinds()){
+                LiteralArgumentBuilder<CommandSource> lab4;
+                if (m.getKeybinds().length > 1){
+                    lab4 = LiteralArgumentBuilder.literal(k.name);
+                } else {
+                    lab4 = lab3;
+                }
+                lab4
+                    .then(
+                        LiteralArgumentBuilder.<CommandSource>literal("none")
+                                .executes(c -> {
+                                    k.key = -1;
+                                    saveConfiguration();
+                                    MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Keybind " + m.getId() + ":" + k.name + " is now bound to §cNONE§7."), false);
+                                    return 0;
+                                })
+                    )
+                    .then(
+                            RequiredArgumentBuilder.<CommandSource, String>argument("keybind", StringArgumentType.string())
+                                    .executes(c -> {
+                                        String s = StringArgumentType.getString(c, "keybind").toUpperCase(Locale.ROOT);
+                                        if (s.length() > 1){
+                                            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §cKeybind should be 1 character long."), false);
+                                            return 0;
+                                        }
+                                        k.key = s.charAt(0);
+                                        saveConfiguration();
+                                        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Keybind " + m.getId() + ":" + k.name + " is now bound to §a" + s + "§7."), false);
+                                        return 0;
+                                    })
+                    )
+                    .executes(c -> {
+                        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Keybind " + m.getId() + ":" + k.name + " is bound to " + (k.key != -1?("§a" + ((char)k.key)):"§cNONE") + "§7."), false);
+                        return 0;
+                    });
+                if (m.getKeybinds().length > 1){
+                    lab3.then(
+                            lab4
+                    );
+                }
+            }
+            lab3
+                .executes(c -> {
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Keybinds:"), false);
+                    for (Keybind k: m.getKeybinds()){
+                        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7" + k.name + ": " + ((k.key != -1?("§a" + ((char)k.key)):"§cNONE"))), false);
+                    }
+                    return 0;
+                });
+            lab2.then(
+                    lab3
+            );
+        });
+
+        dispatcher.register(
+                lab2
+        );
     }
     public static void saveConfiguration(){
         JsonObject o = new JsonObject();
         modules.forEach(k -> {
             JsonObject j2 = new JsonObject();
             if (k.persistEnabling()) j2.addProperty("on", isOn(k));
+            for (Keybind kb: k.getKeybinds()) {
+                j2.addProperty("keybind_" + kb.name, kb.key);
+            }
             k.saveConfig(j2);
             o.add(k.getId(), j2);
         });
@@ -116,6 +186,24 @@ public class ModuleRegistry {
         modMap.put(m.getId(), m);
         m.onRegistered();
     }
+    public static void handleKeybinds(){
+        if (QuasarClient.minecraft.player == null) return;
+        if (QuasarClient.minecraft.currentScreen != null) return;
+        modules.forEach(m -> {
+            for (Keybind k: m.getKeybinds()){
+                if (k.key != -1){
+                    if (InputUtil.isKeyPressed(QuasarClient.minecraft.getWindow().getHandle(), k.key)){
+                        if (!k.held){
+                            k.held = true;
+                            k.runnable.run();
+                        }
+                    } else {
+                        k.held = false;
+                    }
+                }
+            }
+        });
+    }
     public static boolean isOn(Module m){
         return enabled.getOrDefault(m, false);
     }
@@ -124,6 +212,12 @@ public class ModuleRegistry {
         if (enabled.get(m) == on) return;
         enabled.put(m, on);
         m.onToggle();
+        saveConfiguration();
+    }
+    public static void setOnNE(Module m, boolean on){
+        if (!enabled.containsKey(m)) return;
+        if (enabled.get(m) == on) return;
+        enabled.put(m, on);
         saveConfiguration();
     }
     public static Module getModule(String s){

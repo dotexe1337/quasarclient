@@ -5,7 +5,8 @@
   "mixins": [
     "ClientPlayerEntityMixin",
     "CommandSuggestorMixin",
-    "GameRendererMixin"
+    "GameRendererMixin",
+    "TickMixin"
   ],
   "client": [],
   "server": [],

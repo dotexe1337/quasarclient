@@ -1,7 +1,7 @@
 package dev.semisol.quasarclient.module.nofall.mixin;
 
 import dev.semisol.quasarclient.etc.Utils;
-import dev.semisol.quasarclient.module.flight.Flight;
+import dev.semisol.quasarclient.module.dflight.DFlight;
 import dev.semisol.quasarclient.registry.ModuleRegistry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
@@ -18,6 +18,6 @@ public class PlayerMoveC2SPacketMixin {
 
     @Inject(at = @At("HEAD"), method = "write")
     public void init(PacketByteBuf b, CallbackInfo ci){
-        if (ModuleRegistry.isOn(ModuleRegistry.getModule("nofall")) && !Flight.bypassing && !Utils.damageInProgress) this.onGround = true;
+        if (ModuleRegistry.isOn(ModuleRegistry.getModule("nofall")) && !Utils.damageInProgress) this.onGround = true;
     }
 }

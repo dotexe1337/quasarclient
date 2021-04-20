@@ -1,6 +1,8 @@
 package dev.semisol.quasarclient.registry;
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 
 public abstract class Module {
     public String getId(){
@@ -11,6 +13,14 @@ public abstract class Module {
     }
     public void saveConfig(JsonObject j){
         return;
+    }
+    private Keybind[] toggleKeybinds = new Keybind[]{new Keybind(() -> {
+        ModuleRegistry.setOn(this, !ModuleRegistry.isOn(this));
+        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Module " + this.getId() + " is now " + (ModuleRegistry.isOn(this)?"§aON":"§cOFF")), false);
+    }, "toggle")};
+    public static Keybind[] NO_KEYBINDS = new Keybind[]{};
+    public Keybind[] getKeybinds(){
+        return this.isPassive()?NO_KEYBINDS:this.toggleKeybinds;
     }
     public void onHudRender(){
 

@@ -6,10 +6,10 @@
 PLEASE READ THE COPYRIGHT NOTICE IN THE PROJECT ROOT, IF EXISTENT
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
-package dev.semisol.quasarclient.module.flight.mixin;
+package dev.semisol.quasarclient.registry.mixin;
 import dev.semisol.quasarclient.QuasarClient;
-import dev.semisol.quasarclient.module.flight.Flight;
 import dev.semisol.quasarclient.etc.Utils;
+import dev.semisol.quasarclient.module.dflight.DFlight;
 import dev.semisol.quasarclient.registry.ModuleRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -23,17 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TickMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo ci) {
-        if (ModuleRegistry.isOn(ModuleRegistry.getModule("flight")) && QuasarClient.minecraft.player != null) {
-            Flight.ticks++;
-            if (Flight.ticks > 20){
-                Vec3d p = QuasarClient.minecraft.player.getPos();
-                if (Flight.ticks > 21){
-                    Flight.ticks = 0;
-                    Utils.sendPosUpdate(p.x, p.y + 0.2, p.z, true, true);
-                    return;
-                }
-                Utils.sendPosUpdate(p.x, p.y - 0.2, p.z, true, true);
-            }
-        }
+        ModuleRegistry.handleKeybinds();
     }
 }

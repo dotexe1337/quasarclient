@@ -3,8 +3,6 @@
   "package": "dev.semisol.quasarclient.module.flight.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "HealthUpdateS2CPacketMixin",
-    "PlayerMoveC2SPacketMixin",
     "TickMixin"
   ],
   "client": [],
