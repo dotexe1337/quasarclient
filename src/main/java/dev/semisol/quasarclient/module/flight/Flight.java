@@ -2,12 +2,9 @@ package dev.semisol.quasarclient.module.flight;
 
 import dev.semisol.quasarclient.QuasarClient;
 import dev.semisol.quasarclient.etc.Utils;
-import dev.semisol.quasarclient.module.dflight.DFlight;
 import dev.semisol.quasarclient.registry.Module;
 import dev.semisol.quasarclient.registry.ModuleRegistry;
 import net.minecraft.util.math.Vec3d;
-
-import static dev.semisol.quasarclient.etc.Utils.sendPosUpdate;
 
 public class Flight extends Module {
     public static int ticks = 0;

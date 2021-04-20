@@ -25,12 +25,16 @@ public abstract class Module {
     public void onHudRender(){
 
     }
+    public void onRender(){
+
+    }
     public void onRegistered(){
 
     }
     public void onToggle(){
 
     }
+    public boolean requireRendering(){ return false; }
     public boolean isPassive(){
         return false;
     }

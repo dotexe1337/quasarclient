@@ -1,7 +1,6 @@
 package dev.semisol.quasarclient.module.nofall.mixin;
 
 import dev.semisol.quasarclient.etc.Utils;
-import dev.semisol.quasarclient.module.dflight.DFlight;
 import dev.semisol.quasarclient.registry.ModuleRegistry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;

@@ -9,7 +9,6 @@ PLEASE READ THE COPYRIGHT NOTICE IN THE PROJECT ROOT, IF EXISTENT
 package dev.semisol.quasarclient.registry.mixin;
 import dev.semisol.quasarclient.QuasarClient;
 import dev.semisol.quasarclient.etc.Utils;
-import dev.semisol.quasarclient.module.dflight.DFlight;
 import dev.semisol.quasarclient.registry.ModuleRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;

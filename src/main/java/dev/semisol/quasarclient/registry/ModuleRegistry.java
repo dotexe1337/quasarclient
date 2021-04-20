@@ -223,9 +223,14 @@ public class ModuleRegistry {
     public static Module getModule(String s){
         return modMap.getOrDefault(s, null);
     }
+    public static void onHudRender(){
+        modules.forEach(k -> {
+            if ((ModuleRegistry.isOn(k) && !k.isPassive()) || k.requireRendering()) k.onHudRender();
+        });
+    }
     public static void onRender(){
         modules.forEach(k -> {
-            if (ModuleRegistry.isOn(k) && !k.isPassive()) k.onHudRender();
+            if ((ModuleRegistry.isOn(k) && !k.isPassive()) || k.requireRendering()) k.onRender();
         });
     }
 }
