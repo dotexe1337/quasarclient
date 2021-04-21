@@ -13,8 +13,15 @@ import dev.semisol.quasarclient.registry.Module;
 import dev.semisol.quasarclient.registry.ModuleRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -38,6 +45,10 @@ public class HologramAura extends Module {
     public static int radius = 5;
     public static double prec = 1;
     public static boolean running = false;
+    public static boolean runningSpam = false;
+    public static int spamRemaining = 0;
+    public static int spamCount = 0;
+    public static int spt = 4;
     public static List<Vec3d> vecs = new ArrayList<>();
     public static int index = 0;
     public static String text = "test";
@@ -45,7 +56,16 @@ public class HologramAura extends Module {
     @Override
     public void onRender(){
         if (HologramAura.running){
-            RenderHelper.renderLine(center, vecs.get(index), Color.getHSBColor(((float) index) / 40f, 1, 1), 3);
+            RenderHelper.renderLine(center, vecs.get(index), Color.getHSBColor(((float) index) / 40f, 1, 1), 1);
+            RenderHelper.renderBlockOutline(center.subtract(-0.1, -0.1, -0.1), new Vec3d(0.2, 0.2, 0.2), 255, 0, 0, 255);
+            RenderHelper.renderBlockOutline(vecs.get(index).subtract(-0.1, -0.1, -0.1), new Vec3d(0.2, 0.2, 0.2), 0, 255, 0, 255);;
+        }
+        if (HologramAura.runningSpam || HologramAura.running){
+            Vec3d b = QuasarClient.minecraft.player.getPos();
+            b = new Vec3d(b.x, QuasarClient.minecraft.player.getEyeY(), b.z);
+            b = b.add(QuasarClient.minecraft.player.getRotationVector().multiply(2));
+            b = new Vec3d(Math.floor(b.x), Math.floor(b.y), Math.floor(b.z));
+            RenderHelper.renderBlockOutline(b, new Vec3d(1, 1, 1), 0, 0, 255, 255);
         }
     }
 
@@ -80,6 +100,16 @@ public class HologramAura extends Module {
                         })
         );
         lab2.then(
+                LiteralArgumentBuilder.<CommandSource>literal("spam")
+                        .then(
+                                RequiredArgumentBuilder.<CommandSource, Integer>argument("count", IntegerArgumentType.integer(1, 50000))
+                                        .executes(c -> {
+                                            runSpam(IntegerArgumentType.getInteger(c, "count"));
+                                            return 0;
+                                        })
+                        )
+        );
+        lab2.then(
                 LiteralArgumentBuilder.<CommandSource>literal("prec")
                         .then(
                                 RequiredArgumentBuilder.<CommandSource, Double>argument("precision", DoubleArgumentType.doubleArg(0.01, 4))
@@ -91,6 +121,21 @@ public class HologramAura extends Module {
                         )
                         .executes(c -> {
                             MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Precision is §6" + prec + "§7."), false);
+                            return 0;
+                        })
+        );
+        lab2.then(
+                LiteralArgumentBuilder.<CommandSource>literal("spt")
+                        .then(
+                                RequiredArgumentBuilder.<CommandSource, Integer>argument("spt", IntegerArgumentType.integer(1, 40))
+                                        .executes(c -> {
+                                            spt = IntegerArgumentType.getInteger(c, "spt");
+                                            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Stands per tick set to §6" + spt + "§7."), false);
+                                            return 0;
+                                        })
+                        )
+                        .executes(c -> {
+                            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Stands per tick is §6" + spt + "§7."), false);
                             return 0;
                         })
         );
@@ -136,9 +181,40 @@ public class HologramAura extends Module {
         center = QuasarClient.minecraft.player.getPos();
         MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Center set."), false);
     }
+    public static void runSpam(int c){
+        if (running || runningSpam){
+            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §cAlready running."), false);
+            return;
+        }
+        ItemStack as = new ItemStack(Registry.ITEM.get(new Identifier("minecraft", "bat_spawn_egg")));
+        CompoundTag ct = as.getOrCreateSubTag("EntityTag");
+        ct.putString("id", "minecraft:armor_stand");
+        ct.putByte("CustomNameVisible", (byte) 1);
+        ct.putByte("NoGravity", (byte) 1);
+        ct.putByte("Invulnerable", (byte) 1);
+        ct.putByte("Small", (byte) 1);
+        ct.putByte("Marker", (byte) 1);
+        ct.putByte("Invisible", (byte) 1);
+        ct.putByte("CustomNameVisible", (byte) 1);
+        ct.putString("CustomName", HologramAura.en /*escaping bruh*/);
+        ListTag pos = new ListTag();
+        Vec3d v = center;
+        pos.add(0, DoubleTag.of(v.x));
+        pos.add(1, DoubleTag.of(v.y));
+        pos.add(2, DoubleTag.of(v.z));
+        ct.put("Pos", pos /*bruh*/);
+        as.putSubTag("EntityTag", ct);
+        QuasarClient.minecraft.player.inventory.setStack(QuasarClient.minecraft.player.inventory.selectedSlot, as);
+        QuasarClient.minecraft.player.networkHandler.sendPacket(new CreativeInventoryActionC2SPacket(QuasarClient.minecraft.player.inventory.selectedSlot + 36, as));
+        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Running..."), false);
+        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Expected time: §6" + (c / (20 * HologramAura.spt)) + "s"), false);
+        spamCount = c;
+        spamRemaining = c;
+        runningSpam = true;
+    }
     public static void run(){
         if (QuasarClient.minecraft.player == null) return;
-        if (running){
+        if (running || runningSpam){
             MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §cAlready running."), false);
             return;
         }
@@ -158,11 +234,18 @@ public class HologramAura extends Module {
                 vecs.add(new Vec3d(x + center.x, y + center.y, z + center.z));
             }
         }
-        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Expected time: §6" + (vecs.size() / 20) + "s"), false);
+        MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Expected time: §6" + (vecs.size() / (20*spt)) + "s"), false);
         index = 0;
         running = true;
     }
     public static void stop(){
+        if (runningSpam){
+            runningSpam = false;
+            spamCount = 0;
+            spamRemaining = 0;
+            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §7Stopped."), false);
+            return;
+        }
         if (!running){
             MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramaura§7] §cNot running."), false);
             return;
