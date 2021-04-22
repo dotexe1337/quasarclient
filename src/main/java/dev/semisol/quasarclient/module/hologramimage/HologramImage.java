@@ -36,9 +36,15 @@ public class HologramImage extends Module {
     public Vec3d center;
     public int y;
     public int x;
-    public static boolean zenabled = false;
+    public static int m = 0;
     public int spt;
     public ImageObserver io = (img, infoflags, x, y, width, height) -> true;
+    public String[] TYPES = {
+            "+X",
+            "-X",
+            "+Z",
+            "-Z"
+    };
 
     @Override
     public String getId() {
@@ -86,7 +92,7 @@ public class HologramImage extends Module {
                 ct.putByte("CustomNameVisible", (byte) 1);
                 ct.putString("CustomName", "{\"text\":\"⬛\",\"color\":\"#" + c.toString() + "\"}");
                 ListTag pos = new ListTag();
-                Vec3d p = center.add(zenabled?0:0.21 * x, (img.getHeight() - y) * 0.21, zenabled?0.21 * x:0);
+                Vec3d p = center.add(m > 1?0:(m == 1?-0.21 * x:0.21 * x), (img.getHeight() - y) * 0.21, m > 1?(m == 3?-0.21 * x:0.21 * x):0);
                 pos.add(0, DoubleTag.of(p.x));
                 pos.add(1, DoubleTag.of(p.y));
                 pos.add(2, DoubleTag.of(p.z));
@@ -131,6 +137,10 @@ public class HologramImage extends Module {
                                                     y = 0;
                                                     try {
                                                         img = ImageIO.read(new FileInputStream(new File(QuasarClient.minecraft.runDirectory, "image.png")));
+                                                        if (img.getWidth() / sf < 1){
+                                                            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramimage§7] §cScale too high."), false);
+                                                            return 0;
+                                                        }
                                                         BufferedImage resized = new BufferedImage(img.getWidth() / sf, img.getHeight() / sf, img.getType());
                                                         Graphics2D g = resized.createGraphics();
                                                         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
@@ -138,6 +148,7 @@ public class HologramImage extends Module {
                                                         g.drawImage(img, 0, 0, resized.getWidth(), resized.getWidth(), 0, 0, img.getWidth(),
                                                                 img.getHeight(), null);
                                                         g.dispose();
+                                                        img = resized;
                                                         running = true;
                                                         MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramimage§7] §7Estimated time: §6" + ((img.getHeight() * img.getWidth()) / (spt * 20)) + "s"), false);
                                                     } catch (IOException e) {
@@ -168,8 +179,9 @@ public class HologramImage extends Module {
                                 MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramimage§7] §cSetting locked while running."), false);
                                 return 0;
                             }
-                            zenabled = !zenabled;
-                            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramimage§7] §7Axis: §a" + (zenabled?"Z":"X")), false);
+                            m++;
+                            if (m > 3) m = 0;
+                            MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7/§6hologramimage§7] §7Axis: §a" + TYPES[m]), false);
                             return 0;
                         })
         );
