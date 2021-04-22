@@ -1,7 +1,9 @@
 package dev.semisol.quasarclient.etc;
 
 import dev.semisol.quasarclient.QuasarClient;
+import net.minecraft.block.Block;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class Utils {
@@ -18,5 +20,8 @@ public class Utils {
     }
     public static void sendPosUpdate(double x, double y, double z, boolean og, boolean rps){
         if (rps) QuasarClient.minecraft.player.updatePosition(x, y, z); else QuasarClient.minecraft.player.networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionOnly(x, y, z, og));
+    }
+    public static Block getBlockAtPos(double x, double y, double z) {
+        return QuasarClient.minecraft.world.getBlockState(new BlockPos(x, y, z)).getBlock();
     }
 }

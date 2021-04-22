@@ -22,6 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TickMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     public void tick(CallbackInfo ci) {
-        ModuleRegistry.handleKeybinds();
+        ModuleRegistry.handleKeybinds(); ModuleRegistry.onTick();
     }
 }

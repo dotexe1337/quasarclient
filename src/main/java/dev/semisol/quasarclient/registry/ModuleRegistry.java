@@ -67,6 +67,9 @@ public class ModuleRegistry {
                 for (Keybind kb: k.getKeybinds()){
                     kb.key = j2.get("keybind_" + kb.name).getAsInt();
                 }
+                for (ConfigOpt c: k.getOpts()){
+                    c.setJSON(j2.get("conf_" + c.name));
+                }
             } catch(Exception ignored) {
                 QuasarClient.log(Level.WARN, "Malformed config for: " + k.getId());
             }
@@ -159,6 +162,36 @@ public class ModuleRegistry {
         dispatcher.register(
                 lab2
         );
+        LiteralArgumentBuilder<CommandSource> lab3 = LiteralArgumentBuilder.literal("config");
+        modules.forEach(m -> {
+            LiteralArgumentBuilder<CommandSource> lab4 = LiteralArgumentBuilder.literal(m.getId());
+            if (m.getOpts().length < 1) return;
+            for (ConfigOpt c: m.getOpts()){
+                LiteralArgumentBuilder<CommandSource> lab5 = LiteralArgumentBuilder.literal(c.name);
+                lab5.then(c.getRAB().executes(ctx -> {
+                    c.setFromCtx(ctx);
+                    saveConfiguration();
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Value set: §a" + c.value), false);
+                    return 0;
+                }));
+                lab5.executes(ctx -> {
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Value: §a" + c.value), false);
+                    return 0;
+                });
+                lab4.then(lab5);
+            }
+            lab4.executes(c -> {
+                MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7Configuration:"), false);
+                for (ConfigOpt k: m.getOpts()){
+                    MinecraftClient.getInstance().player.sendMessage(Text.of("§7[§9QuasarClient§7] §7" + k.name + ": §a" + k.value), false);
+                }
+                return 0;
+            });
+            lab3.then(
+                    lab4
+            );
+        });
+        dispatcher.register(lab3);
     }
     public static void saveConfiguration(){
         JsonObject o = new JsonObject();
@@ -167,6 +200,9 @@ public class ModuleRegistry {
             if (k.persistEnabling()) j2.addProperty("on", isOn(k));
             for (Keybind kb: k.getKeybinds()) {
                 j2.addProperty("keybind_" + kb.name, kb.key);
+            }
+            for (ConfigOpt c: k.getOpts()){
+                j2.add("conf_" + c.name, c.getJSON());
             }
             k.saveConfig(j2);
             o.add(k.getId(), j2);
@@ -225,12 +261,17 @@ public class ModuleRegistry {
     }
     public static void onHudRender(){
         modules.forEach(k -> {
-            if ((ModuleRegistry.isOn(k) && !k.isPassive()) || k.requireRendering()) k.onHudRender();
+            if (ModuleRegistry.isOn(k) || k.isPassive()) k.onHudRender();
         });
     }
     public static void onRender(){
         modules.forEach(k -> {
-            if ((ModuleRegistry.isOn(k) && !k.isPassive()) || k.requireRendering()) k.onRender();
+            if (ModuleRegistry.isOn(k) || k.isPassive()) k.onRender();
+        });
+    }
+    public static void onTick(){
+        modules.forEach(k -> {
+            if (ModuleRegistry.isOn(k) || k.isPassive()) k.onTick();
         });
     }
 }

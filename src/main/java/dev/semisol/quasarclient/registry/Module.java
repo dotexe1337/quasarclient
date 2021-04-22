@@ -22,10 +22,17 @@ public abstract class Module {
     public Keybind[] getKeybinds(){
         return this.isPassive()?NO_KEYBINDS:this.toggleKeybinds;
     }
+    public static ConfigOpt[] NO_CONFIGURATION = new ConfigOpt[]{};
+    public ConfigOpt[] getOpts(){
+        return NO_CONFIGURATION;
+    }
     public void onHudRender(){
 
     }
     public void onRender(){
+
+    }
+    public void onTick(){
 
     }
     public void onRegistered(){
@@ -34,7 +41,6 @@ public abstract class Module {
     public void onToggle(){
 
     }
-    public boolean requireRendering(){ return false; }
     public boolean isPassive(){
         return false;
     }
