@@ -79,7 +79,7 @@ public class HologramAura extends Module {
     @Override
     public void onTick() {
         if (HologramAura.runningSpam){
-            if (QuasarClient.minecraft.player != null){
+            if (QuasarClient.minecraft.getNetworkHandler() != null){
                 Vec3d b = QuasarClient.minecraft.player.getPos();
                 b = new Vec3d(b.x, QuasarClient.minecraft.player.getEyeY(), b.z);
                 b = b.add(QuasarClient.minecraft.player.getRotationVector().multiply(2));

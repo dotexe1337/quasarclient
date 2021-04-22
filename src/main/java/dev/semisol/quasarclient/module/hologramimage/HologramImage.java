@@ -54,7 +54,7 @@ public class HologramImage extends Module {
     @Override
     public void onTick() {
         if (running){
-            if (QuasarClient.minecraft.player == null){
+            if (QuasarClient.minecraft.getNetworkHandler() == null){
                 running = false;
                 return;
             }
